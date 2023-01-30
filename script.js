@@ -2,7 +2,7 @@
 let str = "0";
 let calculateStr = [];
 
-class ListenerEventsForNumbers{
+class ListenerEvents{
 
     #elementMap = new Map([
         ["zero","0"],
@@ -18,13 +18,13 @@ class ListenerEventsForNumbers{
     ])
 
     #textDisplay = document.getElementById("displayStr")
-    #elementFromListener = null;
+    #elementFromListener = "0";
     
 
 
     constructor(elementId){
         this.elementId = elementId;        
-        this.#textDisplay.textContent = str;
+        this.#textDisplay.value = str;
         this.#elementFromListener = document.getElementById(this.elementId)
     }
 
@@ -33,6 +33,7 @@ class ListenerEventsForNumbers{
     #listenerFunction(callbackfn){
         this.#elementFromListener.addEventListener("click",callbackfn)
     }
+    
 
 
     // Adding events for individual units
@@ -40,7 +41,7 @@ class ListenerEventsForNumbers{
     _listeningNumberEvents = () => {
         this.#listenerFunction(() => {
             str = str === "0" ? this.#elementMap.get(this.elementId).toString() : str.concat(this.#elementMap.get(this.elementId).toString())            
-            this.#textDisplay.textContent = str
+            this.#textDisplay.value = str
         })       
     }
 
@@ -48,7 +49,9 @@ class ListenerEventsForNumbers{
     _listeningArithmeticEvents(){
         this.#listenerFunction(() => {
             calculateStr.push(str,this.#elementFromListener.textContent)
-            this.#textDisplay?.textContent = "0";
+            // alert(calculateStr)
+            this.#textDisplay.textContent = "0";
+            str = "0";
         })
     }
 
@@ -58,7 +61,7 @@ class ListenerEventsForNumbers{
 let numberArray = ["one","two","three","four","five","six","seven","eight","nine","zero"]
 
 numberArray.forEach(i => {
-    let obj = new ListenerEventsForNumbers(i)
+    let obj = new ListenerEvents(i)
     obj._listeningNumberEvents()
 })
 
@@ -67,12 +70,43 @@ numberArray.forEach(i => {
 
 const arithmeticOperatorArray = ["addition","subtraction","multiply","division"] 
 
+arithmeticOperatorArray.forEach((i) => {
+    let obj = new ListenerEvents(i)
+    obj._listeningArithmeticEvents()
+})
+
+document.getElementById("equal").addEventListener("click",() => {
+    calculateStr.push(str)
+    let sum = eval(calculateStr.toString().replaceAll(",",""))
+    document.getElementById("displayStr").value = sum;
+    str = sum;    
+    calculateStr = [];
+}); 
+
+document.getElementById("clear").addEventListener("click",() => {
+    str = 0;
+    document.getElementById("displayStr").value = str;
+})
 
 
 
+// keyboard events listening
+// will listen globally
 
+document.addEventListener('keydown', (event) => {
+    var name = event.key;
+    
+    
 
+    if(/^\d+$/.test(name) || name === "."){
+        str = str === "0" ? name : str.concat(name)
+        document.getElementById("displayStr").value = str;
+    }
+    // Alert the key name and key code on keydown
+    
+}, false);
 
-
-
-
+document.getElementById("dot").addEventListener("click",() => {
+    str = str.concat(".")
+    document.getElementById("displayStr").value = str;
+})
