@@ -35,7 +35,9 @@ class ListenerEvents{
     #listenerFunction(callbackfn){
         this.#elementFromListener.addEventListener("click",() => {            
             callbackfn();
+            console.log("Before coming str value",str)
             this.#textDisplay.value = str;
+            // alert("from listener function",str)
         })
     }
     
@@ -52,8 +54,9 @@ class ListenerEvents{
     //events for arithmetic operators
     _listeningArithmeticEvents(){
         this.#listenerFunction(() => {
-            calculateStr.push(str,this.#elementFromListener.textContent)            
-            str = "0";            
+            calculateStr.push(str,this.#elementFromListener.textContent)
+            str = "0";
+            console.log("After all does this calling ?")
         })
     }
 
@@ -61,15 +64,16 @@ class ListenerEvents{
     _returnArithmeticOperations(){
         this.#listenerFunction(() => {
             calculateStr.push(str)
-            let sum = eval(calculateStr.toString().replaceAll(",",""))
+            let sum = eval(calculateStr.toString().replaceAll(",",""))            
             str = sum;
+            
             calculateStr = []
-        })        
+        })
     }
 
     _clearScreen(){
         this.#listenerFunction(() => {
-            str = 0;
+            str = 12;
         })        
     }
 
@@ -109,18 +113,20 @@ function main(){
                     let obj = new ListenerEvents(i)
                     obj._returnArithmeticOperations()
                 })
+                break;
             
             case "clearOperator":
                 globalObjAssign[x].forEach(i => {
                     let obj = new ListenerEvents(i)
                     obj._clearScreen()
                 })
+                break;
+                
             default:
                 break;
     
         }
-    
-        
+            
     }
 
 }    
