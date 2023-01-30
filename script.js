@@ -1,3 +1,5 @@
+'use strict'
+
 
 let str = "0";
 let calculateStr = [];
@@ -31,7 +33,10 @@ class ListenerEvents{
 
     // listener callback function that retrun callback : higher order function
     #listenerFunction(callbackfn){
-        this.#elementFromListener.addEventListener("click",callbackfn)
+        this.#elementFromListener.addEventListener("click",() => {            
+            callbackfn();
+            this.#textDisplay.value = str;
+        })
     }
     
 
@@ -41,47 +46,88 @@ class ListenerEvents{
     _listeningNumberEvents = () => {
         this.#listenerFunction(() => {
             str = str === "0" ? this.#elementMap.get(this.elementId).toString() : str.concat(this.#elementMap.get(this.elementId).toString())            
-            this.#textDisplay.value = str
         })       
     }
 
     //events for arithmetic operators
     _listeningArithmeticEvents(){
         this.#listenerFunction(() => {
-            calculateStr.push(str,this.#elementFromListener.textContent)
-            // alert(calculateStr)
-            this.#textDisplay.textContent = "0";
-            str = "0";
+            calculateStr.push(str,this.#elementFromListener.textContent)            
+            str = "0";            
         })
+    }
+
+    //after equal operator clicks or enter
+    _returnArithmeticOperations(){
+        this.#listenerFunction(() => {
+            calculateStr.push(str)
+            let sum = eval(calculateStr.toString().replaceAll(",",""))
+            str = sum;
+            calculateStr = []
+        })        
+    }
+
+    _clearScreen(){
+        this.#listenerFunction(() => {
+            str = 0;
+        })        
     }
 
 }
 
-// Calculate and eventListening for numbers
-let numberArray = ["one","two","three","four","five","six","seven","eight","nine","zero"]
+function main(){
+    
+    // Calculate and eventListening for numbers
+    const globalObjAssign = {
+        numberArray:["one","two","three","four","five","six","seven","eight","nine","zero"],
+        arithmeticOperatorArray: ["addition","subtraction","multiply","division"],
+        equalOperator:["equal"],
+        clearOperator:["clear"]
+    }
+    
+    
+    // main logic
+    for(let x of Object.keys(globalObjAssign)){
+    
+        switch(x){
+            case "numberArray":
+                globalObjAssign[x].forEach(i => {
+                    let obj = new ListenerEvents(i)
+                    obj._listeningNumberEvents()
+                })
+                break;
+            
+            case "arithmeticOperatorArray":
+                globalObjAssign[x].forEach(i => {
+                    let obj = new ListenerEvents(i)
+                    obj._listeningArithmeticEvents()
+                })
+                break;
+    
+            case "equalOperator":
+                globalObjAssign[x].forEach(i => {
+                    let obj = new ListenerEvents(i)
+                    obj._returnArithmeticOperations()
+                })
+            
+            case "clearOperator":
+                globalObjAssign[x].forEach(i => {
+                    let obj = new ListenerEvents(i)
+                    obj._clearScreen()
+                })
+            default:
+                break;
+    
+        }
+    
+        
+    }
 
-numberArray.forEach(i => {
-    let obj = new ListenerEvents(i)
-    obj._listeningNumberEvents()
-})
+}    
+
+main();
 
 
-// Event Listening for arithmetic operator
-
-const arithmeticOperatorArray = ["addition","subtraction","multiply","division"] 
-
-arithmeticOperatorArray.forEach((i) => {
-    let obj = new ListenerEvents(i)
-    obj._listeningArithmeticEvents()
-})
-
-document.getElementById("equal").addEventListener("click",() => {
-    calculateStr.push(str)
-    let sum = eval(calculateStr.toString().replaceAll(",",""))
-    document.getElementById("displayStr").value = sum;
-    str = sum;    
-    calculateStr = [];
-}); 
 
 document.getElementById("clear").addEventListener("click",() => {
     str = 0;
@@ -95,14 +141,13 @@ document.getElementById("clear").addEventListener("click",() => {
 
 document.addEventListener('keydown', (event) => {
     var name = event.key;
-    
-    
+        
 
-    if(/^\d+$/.test(name) || name === "."){
+    if(!isNaN(name) || name === "."){
         str = str === "0" ? name : str.concat(name)
         document.getElementById("displayStr").value = str;
     }
-    // Alert the key name and key code on keydown
+    
     
 }, false);
 
