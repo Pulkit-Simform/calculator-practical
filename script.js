@@ -213,3 +213,24 @@ function main(){
 }    
 
 main();
+
+
+document.addEventListener('keydown', (event) => {
+    let val = event.key;
+    let numericReg = /^\d+$/;
+    let displayStr = document.getElementById("displayStr")
+
+    // Alert the key name and key code on keydown
+    // console.log(displayStr === "0")
+    // console.log(val)
+    if(numericReg.test(val)){
+        
+        if(displayStr.value === "0"){
+            // console.log("Coming inside")
+            displayStr.value = val;
+        }else{
+            displayStr.value += val;
+        }
+        // displayStr === "0" ? displayStr = val : displayStr += val
+    }
+  }, false);
