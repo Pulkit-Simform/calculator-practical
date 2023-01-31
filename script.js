@@ -23,21 +23,18 @@ class ListenerEvents{
     #elementFromListener = "0";
     
 
-
     constructor(elementId){
         this.elementId = elementId;        
         this.#textDisplay.value = str;
         this.#elementFromListener = document.getElementById(this.elementId)
     }
 
-
+ 
     // listener callback function that retrun callback : higher order function
     #listenerFunction(callbackfn){
         this.#elementFromListener.addEventListener("click",() => {            
-            callbackfn();
-            console.log("Before coming str value",str)
-            this.#textDisplay.value = str;
-            // alert("from listener function",str)
+            str = callbackfn();
+            this.#textDisplay.value = str;            
         })
     }
     
@@ -47,16 +44,15 @@ class ListenerEvents{
     //events for number
     _listeningNumberEvents = () => {
         this.#listenerFunction(() => {
-            str = str === "0" ? this.#elementMap.get(this.elementId).toString() : str.concat(this.#elementMap.get(this.elementId).toString())            
-        })       
+            return str === "0" ? this.#elementMap.get(this.elementId).toString() : str.concat(this.#elementMap.get(this.elementId).toString())            
+        })              
     }
 
     //events for arithmetic operators
     _listeningArithmeticEvents(){
         this.#listenerFunction(() => {
             calculateStr.push(str,this.#elementFromListener.textContent)
-            str = "0";
-            console.log("After all does this calling ?")
+            return "0";            
         })
     }
 
@@ -65,16 +61,23 @@ class ListenerEvents{
         this.#listenerFunction(() => {
             calculateStr.push(str)
             let sum = eval(calculateStr.toString().replaceAll(",",""))            
-            str = sum;
-            
             calculateStr = []
+            return sum;
         })
     }
 
-    _clearScreen(){
+    _concateTheString(s){ 
         this.#listenerFunction(() => {
-            str = 12;
-        })        
+            if(s === "0") return "0"
+            else if(s === "3.142857143") return "3.142857143"
+            else if(s === "("){
+                return s.concat(str)
+            }
+            else{
+                let temp = str;
+                return temp.concat(s)
+            }
+        });
     }
 
 }
@@ -86,65 +89,62 @@ function main(){
         numberArray:["one","two","three","four","five","six","seven","eight","nine","zero"],
         arithmeticOperatorArray: ["addition","subtraction","multiply","division"],
         equalOperator:["equal"],
-        clearOperator:["clear"]
+        clearOperator:["dot","clear","left-parentheses","right-parentheses","pi"]
     }
+
+    // Will bind an Object and will return the Object
+    const ObjReturn = (x) => {
+        let obj = new Array();
+        globalObjAssign[x].forEach(i => {
+            obj.push(new ListenerEvents(i))            
+        })        
+        return obj;
+    }
+
+
+    const bindString = {
+        "dot":".",
+        "clear":"0",
+        "left-parentheses":"(",
+        "right-parentheses":")",
+        "pi":"3.142857143"
+    };
+
     
     
     // main logic
     for(let x of Object.keys(globalObjAssign)){
     
         switch(x){
-            case "numberArray":
-                globalObjAssign[x].forEach(i => {
-                    let obj = new ListenerEvents(i)
-                    obj._listeningNumberEvents()
-                })
+            case "numberArray":                
+                ObjReturn(x).forEach(x => x._listeningNumberEvents())
                 break;
             
             case "arithmeticOperatorArray":
-                globalObjAssign[x].forEach(i => {
-                    let obj = new ListenerEvents(i)
-                    obj._listeningArithmeticEvents()
-                })
+                ObjReturn(x).forEach(i => i._listeningArithmeticEvents())
                 break;
     
             case "equalOperator":
-                globalObjAssign[x].forEach(i => {
-                    let obj = new ListenerEvents(i)
-                    obj._returnArithmeticOperations()
-                })
+                ObjReturn(x).forEach(i => i._returnArithmeticOperations())
                 break;
             
             case "clearOperator":
-                globalObjAssign[x].forEach(i => {
-                    let obj = new ListenerEvents(i)
-                    obj._clearScreen()
+                ObjReturn(x).forEach(i => {                    
+                    i._concateTheString(bindString[i.elementId])
                 })
                 break;
-                
-            default:
-                break;
-    
-        }
-            
-    }
 
+            default:
+                break;    
+        }            
+    }
 }    
 
 main();
 
 
 
-document.getElementById("clear").addEventListener("click",() => {
-    str = 0;
-    document.getElementById("displayStr").value = str;
-})
-
-
-
-// keyboard events listening
-// will listen globally
-
+// for all keyboard events
 document.addEventListener('keydown', (event) => {
     var name = event.key;
         
@@ -157,7 +157,3 @@ document.addEventListener('keydown', (event) => {
     
 }, false);
 
-document.getElementById("dot").addEventListener("click",() => {
-    str = str.concat(".")
-    document.getElementById("displayStr").value = str;
-})
