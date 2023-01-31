@@ -37,8 +37,6 @@ class ListenerEvents{
             this.#textDisplay.value = str;            
         })
     }
-    
-
 
     // Adding events for individual units
     //events for number
@@ -66,18 +64,68 @@ class ListenerEvents{
         })
     }
 
-    _concateTheString(s){ 
-        this.#listenerFunction(() => {
-            if(s === "0") return "0"
-            else if(s === "3.142857143") return "3.142857143"
-            else if(s === "("){
-                return s.concat(str)
-            }
+    _miscOperation(s){ 
+        this.#listenerFunction(() => {            
+            if(!isNaN(parseInt(s))) return s;            
+            else if(s === "(" || s === "-") return s.concat(str)            
             else{
                 let temp = str;
                 return temp.concat(s)
             }
         });
+    }
+
+    _computeOperation(s){
+        this.#listenerFunction(() => {
+            let t = Number(str)
+            let tempObj = {
+                "sineFunction":Math.sin(t),
+                "cosineFunction":Math.cos(t),
+                "tangentFunction":Math.tan(t),
+                "log":Math.log(t),
+                "raiseToTen":Math.pow(10,t),
+                "abs":Math.abs(t),
+                "root":Math.sqrt(t), 
+                "square":Math.pow(t,t)
+            }
+           if(s === "factorial"){
+                if(str === "0") return "1"            
+                else if(str === "1") return "1"
+                else{
+                    let temp = parseInt(str)
+                    let sum = 1;
+                    while(temp!==0){
+                        sum *= temp;
+                        temp--;
+                    }
+                    return sum;
+                }
+           }
+           else {
+            return tempObj[s];
+           }
+           
+        });
+    }
+
+    _clearOperation(s){
+        this.#listenerFunction(() => {
+            let temp = str;
+            
+            if(s === "clear" && temp.length > 1){                
+                temp = temp.split("")
+                temp.pop();
+                temp = temp.toString().replaceAll(",","")            
+                return temp                
+            }
+            if(s === "ce"){
+                calculateStr = [];
+                return "0"
+            }
+            else{
+                return "0"
+            }
+        })
     }
 
 }
@@ -87,9 +135,11 @@ function main(){
     // Calculate and eventListening for numbers
     const globalObjAssign = {
         numberArray:["one","two","three","four","five","six","seven","eight","nine","zero"],
-        arithmeticOperatorArray: ["addition","subtraction","multiply","division"],
+        arithmeticOperatorArray: ["addition","subtraction","multiply","division","modulo"],
         equalOperator:["equal"],
-        clearOperator:["dot","clear","left-parentheses","right-parentheses","pi"]
+        clearOperator:["clear","ce","c"],
+        miscOperator:["dot","left-parentheses","right-parentheses","pi","exponential","plus-minus","raiseTo"],
+        computeOperator:["factorial","sineFunction","cosineFunction","tangentFunction","log","abs","root","raiseToTen","square"],        
     }
 
     // Will bind an Object and will return the Object
@@ -101,13 +151,16 @@ function main(){
         return obj;
     }
 
-
+    //bind string for equal operator
+    // you can add there and will later 
     const bindString = {
-        "dot":".",
-        "clear":"0",
+        "dot":".",        
         "left-parentheses":"(",
         "right-parentheses":")",
-        "pi":"3.142857143"
+        "pi":"3.142857143",
+        "exponential":"2.718281828",
+        "plus-minus":"-",
+        "raiseTo":"**"
     };
 
     
@@ -128,12 +181,24 @@ function main(){
                 ObjReturn(x).forEach(i => i._returnArithmeticOperations())
                 break;
             
-            case "clearOperator":
+            case "miscOperator":
                 ObjReturn(x).forEach(i => {                    
-                    i._concateTheString(bindString[i.elementId])
+                    i._miscOperation(bindString[i.elementId])
                 })
                 break;
 
+            case "clearOperator":
+                ObjReturn(x).forEach(i => {
+                    i._clearOperation(i.elementId)
+                })
+                break;
+
+            case "computeOperator":
+                ObjReturn(x).forEach(i => {                    
+                    i._computeOperation(i.elementId)
+                })
+                break;
+            
             default:
                 break;    
         }            
@@ -141,19 +206,3 @@ function main(){
 }    
 
 main();
-
-
-
-// for all keyboard events
-document.addEventListener('keydown', (event) => {
-    var name = event.key;
-        
-
-    if(!isNaN(name) || name === "."){
-        str = str === "0" ? name : str.concat(name)
-        document.getElementById("displayStr").value = str;
-    }
-    
-    
-}, false);
-
