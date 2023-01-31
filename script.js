@@ -57,10 +57,17 @@ class ListenerEvents{
     //after equal operator clicks or enter
     _returnArithmeticOperations(){
         this.#listenerFunction(() => {
-            calculateStr.push(str)
-            let sum = eval(calculateStr.toString().replaceAll(",",""))            
-            calculateStr = []
-            return sum;
+            // console.log(calculateStr.length)
+            if(calculateStr.length > 0){
+                calculateStr.push(str)
+            
+                let sum = eval(calculateStr.toString().replaceAll(",",""))
+                calculateStr = []
+                return sum;
+            }else{
+                let sum = this.#textDisplay.value                                
+                return eval(sum);
+            }
         })
     }
 
