@@ -224,7 +224,7 @@ let prev = ""
 
 document.addEventListener('keydown', (event) => {
     let val = event.key;
-    console.log(val)
+    // console.log(val)
     let numericReg = /^\d+$/;
     let operandCheck = /[\+\-\*\/\%\.\!]/g;
 
