@@ -4,6 +4,20 @@
 let str = "0";
 let calculateStr = [];
 
+const factorialFunction = (value) => {
+    if(value === "0") return "1"            
+    else if(value === "1") return "1"
+    else{
+        let temp = parseInt(value)
+        let sum = 1;
+        while(temp!==0){
+            sum *= temp;
+            temp--;
+        }
+        return sum;
+    }
+}
+
 class ListenerEvents{
 
     #elementMap = new Map([
@@ -96,17 +110,7 @@ class ListenerEvents{
                 "square":Math.pow(t,2)
             }
            if(s === "factorial"){
-                if(str === "0") return "1"            
-                else if(str === "1") return "1"
-                else{
-                    let temp = parseInt(str)
-                    let sum = 1;
-                    while(temp!==0){
-                        sum *= temp;
-                        temp--;
-                    }
-                    return sum;
-                }
+               return factorialFunction(str)
            }
            else {
             return tempObj[s];
@@ -216,11 +220,13 @@ main();
 
 // keyboard event listening
 
+let prev = ""
+
 document.addEventListener('keydown', (event) => {
     let val = event.key;
     console.log(val)
     let numericReg = /^\d+$/;
-    let operandCheck = /[\+\-\*\/\%]/g;
+    let operandCheck = /[\+\-\*\/\%\.\!]/g;
 
     let displayStr = document.getElementById("displayStr")
     // for numeric regex checking
@@ -241,10 +247,75 @@ document.addEventListener('keydown', (event) => {
         }
     }
 
-    if(val === "Enter"){
-        displayStr.value = eval(displayStr.value)
+    if(val === "Enter" || val === "="){
+        try{
+            let answer = null;
+            if(displayStr.value.slice(-1) === "!"){
+                answer = factorialFunction(displayStr.value.slice(0,-1))
+            }else{
+                answer = eval(displayStr.value)
+            }
+
+            // setTimeout(() => {                
+            //     displayStr.value = "0"
+            // },500)
+            
+            displayStr.value = answer
+
+        }catch (e) {                        
+         
+            setTimeout(() => { 
+                displayStr.value = "0"            
+                displayStr.classList.remove("bg-danger","text-white");
+            },1000)                
+        
+            displayStr.value = "Please Enter the Proper Value"
+            displayStr.classList.add("bg-danger","text-white");
+            
+        }
+    }
+
+    if(val === "Backspace"){
+        if(displayStr.value === "0" || displayStr.value.length === 1){        
+            displayStr.value = 0;
+        }
+        else{
+            displayStr.value = displayStr.value.slice(0,displayStr.value.length-1)            
+        }
     }
 
 
+    if((prev === "Shift" && val === "(") || (prev === "Shift" && val === ")") ){
+        
+        if(displayStr.value === "0"){        
+            displayStr.value = val;
+        }
+        else{
+            displayStr.value += val;
+        }
+    }
+
+   
+
+
+
+    prev = val
 
   }, false);
+
+  //cancel button
+  document.querySelector("#cancelButton").addEventListener("click",() => {
+    document.querySelector(".switch").classList.remove("d-none")
+    document.querySelector(".switchTo").classList.add("d-none")
+  })
+
+  document.querySelector("#showButton").addEventListener("click",() => {
+    document.querySelector(".switch").classList.add("d-none")
+    document.querySelector(".switchTo").classList.remove("d-none")
+  })
+
+  document.getElementById("hideButton").addEventListener("click",() => {
+    let s = document.querySelector(".displayShow")
+    if(s.classList?.contains("d-none")) s.classList.remove("d-none")
+    else s.classList.add("d-none")
+  })
