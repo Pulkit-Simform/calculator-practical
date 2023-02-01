@@ -1,9 +1,19 @@
 'use strict'
 
-
+// global variable **str** 
+/*
+    it stores each an individual for temporary
+*/
 let str = "0";
+
+/*
+    This will store each operator with 
+    prefix, operand, suffix
+    e.g. "12","+","3"
+*/
 let calculateStr = [];
 
+// factorial function
 const factorialFunction = (value) => {
     if(value === "0") return "1"            
     else if(value === "1") return "1"
@@ -20,6 +30,7 @@ const factorialFunction = (value) => {
 
 class ListenerEvents{
 
+    // it will map corresponding element id to value
     #elementMap = new Map([
         ["zero","0"],
         ["one","1"],
@@ -74,8 +85,9 @@ class ListenerEvents{
             // console.log(calculateStr.length)
             if(calculateStr.length > 0){
                 calculateStr.push(str)
-            
-                let sum = eval(calculateStr.toString().replaceAll(",",""))
+                let c = calculateStr.toString().replaceAll(",","")                            
+                let sum = eval(c)
+                document.querySelector(".history-text").innerText = c + "=" + sum;
                 calculateStr = []
                 return sum;
             }else{
@@ -85,6 +97,9 @@ class ListenerEvents{
         })
     }
 
+    /*
+    *   Mischelleneous Operation
+    */
     _miscOperation(s){ 
         this.#listenerFunction(() => {            
             if(!isNaN(parseInt(s))) return s;            
@@ -107,14 +122,11 @@ class ListenerEvents{
                 "raiseToTen":Math.pow(10,t),
                 "abs":Math.abs(t),
                 "root":Math.sqrt(t), 
-                "square":Math.pow(t,2)
-            }
-           if(s === "factorial"){
-               return factorialFunction(str)
-           }
-           else {
+                "square":Math.pow(t,2),
+                "factorial":factorialFunction(t)
+            }           
+           
             return tempObj[s];
-           }
            
         });
     }
@@ -141,6 +153,11 @@ class ListenerEvents{
 
 }
 
+// Main Function 
+/*
+    This will create an object of ListenerEvents class and 
+    implementing methods of it as require on click events
+*/
 function main(){
     
     // Calculate and eventListening for numbers
@@ -216,10 +233,10 @@ function main(){
     }
 }    
 
+// invoking main function
 main();
 
 // keyboard event listening
-
 let prev = ""
 
 document.addEventListener('keydown', (event) => {
@@ -255,10 +272,12 @@ document.addEventListener('keydown', (event) => {
             }else{
                 answer = eval(displayStr.value)
             }
-
-            // setTimeout(() => {                
-            //     displayStr.value = "0"
-            // },500)
+            
+            document.querySelector(".history-text").innerText = displayStr.value + "=" + answer;
+            
+            setTimeout(() => {                
+                displayStr.value = "0"
+            },1000)
             
             displayStr.value = answer
 
@@ -302,25 +321,36 @@ document.addEventListener('keydown', (event) => {
     prev = val
     str = displayStr.value
 
-  }, false);
+}, false);    
 
-  //cancel button
-  document.querySelector("#cancelButton").addEventListener("click",() => {
+//cancel button
+document.querySelector("#cancelButton").addEventListener("click",() => {
     document.querySelector(".switch").classList.remove("d-none")
     document.querySelector(".switchTo").classList.add("d-none")
-  })
+})
 
-  document.querySelector("#showButton").addEventListener("click",() => {
+
+
+// show button 
+document.querySelector("#showButton").addEventListener("click",() => {
     document.querySelector(".switch").classList.add("d-none")
     document.querySelector(".switchTo").classList.remove("d-none")
 
     let s = document.querySelector(".displayShow")
     if(s.classList?.contains("d-none")) s.classList.remove("d-none")
-    
-  })
 
-  document.getElementById("hideButton").addEventListener("click",() => {
+})
+
+
+// for hiding button
+document.getElementById("hideButton").addEventListener("click",() => {
     let s = document.querySelector(".displayShow")
     if(s.classList?.contains("d-none")) s.classList.remove("d-none")
     else s.classList.add("d-none")
-  })
+})
+
+
+
+
+
+  
