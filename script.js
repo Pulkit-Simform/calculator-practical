@@ -312,6 +312,10 @@ document.addEventListener('keydown', (event) => {
   document.querySelector("#showButton").addEventListener("click",() => {
     document.querySelector(".switch").classList.add("d-none")
     document.querySelector(".switchTo").classList.remove("d-none")
+
+    let s = document.querySelector(".displayShow")
+    if(s.classList?.contains("d-none")) s.classList.remove("d-none")
+    
   })
 
   document.getElementById("hideButton").addEventListener("click",() => {
