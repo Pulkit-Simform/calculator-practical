@@ -300,6 +300,7 @@ document.addEventListener('keydown', (event) => {
 
 
     prev = val
+    str = displayStr.value
 
   }, false);
 
