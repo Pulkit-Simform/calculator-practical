@@ -266,21 +266,27 @@ document.addEventListener('keydown', (event) => {
 
     if(val === "Enter" || val === "="){
         try{
-            let answer = null;
+            let answer = "";
+
             if(displayStr.value.slice(-1) === "!"){
-                answer = factorialFunction(displayStr.value.slice(0,-1))
+                answer = factorialFunction(displayStr.value.slice(0,-1));
             }else{
-                answer = eval(displayStr.value)
+                console.log(displayStr.value);
+                answer = eval(displayStr.value).toString();
+                console.log("Answer ",answer);
             }
             
-            document.querySelector(".history-text").innerText = displayStr.value + "=" + answer;
+            let historyText = document.querySelector(".history-text");
+            historyText.innerText = displayStr.value + "=" + answer;
+            historyText.classList.add("blink_me");
             
-            setTimeout(() => {                
-                displayStr.value = "0"
-            },1000)
+            // setTimeout(() => {                
+            //     displayStr.value = "0"
+            // },1000);
+            console.log(displayStr.value,"   sdfsdf ")
+            // displayStr.value = "0";
+            displayStr.value = answer;
             
-            displayStr.value = answer
-
         }catch (e) {                        
          
             setTimeout(() => { 
