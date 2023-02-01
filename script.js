@@ -93,7 +93,7 @@ class ListenerEvents{
                 "raiseToTen":Math.pow(10,t),
                 "abs":Math.abs(t),
                 "root":Math.sqrt(t), 
-                "square":Math.pow(t,t)
+                "square":Math.pow(t,2)
             }
            if(s === "factorial"){
                 if(str === "0") return "1"            
@@ -214,23 +214,37 @@ function main(){
 
 main();
 
+// keyboard event listening
 
 document.addEventListener('keydown', (event) => {
     let val = event.key;
+    console.log(val)
     let numericReg = /^\d+$/;
-    let displayStr = document.getElementById("displayStr")
+    let operandCheck = /[\+\-\*\/\%]/g;
 
-    // Alert the key name and key code on keydown
-    // console.log(displayStr === "0")
-    // console.log(val)
-    if(numericReg.test(val)){
-        
-        if(displayStr.value === "0"){
-            // console.log("Coming inside")
+    let displayStr = document.getElementById("displayStr")
+    // for numeric regex checking
+    if(numericReg.test(val)){        
+        if(displayStr.value === "0"){        
+            displayStr.value = val;
+        }else{
+            displayStr.value += val;
+        }        
+    }
+
+    // for plus minus division and multiplication reg checking
+    if(operandCheck.test(val)){
+        if(displayStr.value === "0"){        
             displayStr.value = val;
         }else{
             displayStr.value += val;
         }
-        // displayStr === "0" ? displayStr = val : displayStr += val
     }
+
+    if(val === "Enter"){
+        displayStr.value = eval(displayStr.value)
+    }
+
+
+
   }, false);
