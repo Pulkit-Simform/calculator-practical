@@ -69,6 +69,7 @@ class ListenerEvents{
         this.#listenerFunction(() => {
             return str === "0" ? this.#elementMap.get(this.elementId).toString() : str.concat(this.#elementMap.get(this.elementId).toString())            
         })              
+
     }
 
     //events for arithmetic operators
@@ -113,21 +114,24 @@ class ListenerEvents{
 
     _computeOperation(s){
         this.#listenerFunction(() => {
-            let t = Number(str)
-            let tempObj = {
-                "sineFunction":Math.sin(t),
-                "cosineFunction":Math.cos(t),
-                "tangentFunction":Math.tan(t),
-                "log":Math.log(t),
-                "raiseToTen":Math.pow(10,t),
-                "abs":Math.abs(t),
-                "root":Math.sqrt(t), 
-                "square":Math.pow(t,2),
-                "factorial":factorialFunction(t)
-            }           
-           
-            return tempObj[s];
-           
+            let t = Number(str);
+            if(s === "absolute"){
+                return Math.abs(t);
+            }else{
+
+                let m = new Map([
+                    ["sineFunction",Math.sin(t)],
+                    ["cosineFunction",Math.cos(t)],
+                    ["tangentFunction",Math.tan(t)],
+                    ["log",Math.log(t)],
+                    ["raiseToTen",Math.pow(10,t)],
+                    ["absolute",Math.abs(t)],
+                    ["root",Math.sqrt(t)],
+                    ["square",Math.pow(t,2)],
+                    ["factorial",factorialFunction(t)]
+                ])
+                return m.get(s);                
+            }                       
         });
     }
 
@@ -167,7 +171,7 @@ function main(){
         equalOperator:["equal"],
         clearOperator:["clear","ce","c"],
         miscOperator:["dot","left-parentheses","right-parentheses","pi","exponential","plus-minus","raiseTo"],
-        computeOperator:["factorial","sineFunction","cosineFunction","tangentFunction","log","abs","root","raiseToTen","square"],        
+        computeOperator:["factorial","sineFunction","cosineFunction","tangentFunction","log","absolute","root","raiseToTen","square"],        
     }
 
     // Will bind an Object and will return the Object
@@ -263,8 +267,8 @@ document.addEventListener('keydown', (event) => {
             displayStr.value += val;
         }
     }
-
-    if(val === "Enter" || val === "="){
+  
+    if( val === "Enter" || val === "="){
         try{
             let answer = "";
 
@@ -283,10 +287,11 @@ document.addEventListener('keydown', (event) => {
             // setTimeout(() => {                
             //     displayStr.value = "0"
             // },1000);
-            console.log(displayStr.value,"   sdfsdf ")
+            console.log(displayStr.value,": Before")
             // displayStr.value = "0";
-            displayStr.value = answer;
-            
+            // displayStr.value = answer;
+            document.querySelector("#displayStr").value = eval(document.querySelector("#displayStr").value)
+            console.log(displayStr.value,":After")
         }catch (e) {                        
          
             setTimeout(() => { 
