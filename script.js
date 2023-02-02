@@ -116,6 +116,7 @@ class ListenerEvents{
         this.#listenerFunction(() => {
             let t = Number(str);
             if(s === "absolute"){
+                // document.querySelector(".history-text").innerText = this.#textDisplay.value + "=";
                 return Math.abs(t);
             }else{
 
@@ -125,7 +126,7 @@ class ListenerEvents{
                     ["tangentFunction",Math.tan(t)],
                     ["log",Math.log(t)],
                     ["raiseToTen",Math.pow(10,t)],
-                    ["absolute",Math.abs(t)],
+                    // ["absolute",Math.abs(t)],
                     ["root",Math.sqrt(t)],
                     ["square",Math.pow(t,2)],
                     ["factorial",factorialFunction(t)]
@@ -288,10 +289,10 @@ document.addEventListener('keydown', (event) => {
             //     displayStr.value = "0"
             // },1000);
             console.log(displayStr.value,": Before")
-            // displayStr.value = "0";
-            // displayStr.value = answer;
-            document.querySelector("#displayStr").value = eval(document.querySelector("#displayStr").value)
+            
+            document.querySelector("#displayStr").value = answer;
             console.log(displayStr.value,":After")
+            
         }catch (e) {                        
          
             setTimeout(() => { 
