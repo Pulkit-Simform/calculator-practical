@@ -246,7 +246,7 @@ let prev = ""
 
 document.addEventListener('keydown', (event) => {
     let val = event.key;
-    // console.log(val)
+    console.log(val)
     let numericReg = /^\d+$/;
     let operandCheck = /[\+\-\*\/\%\.\!]/g;
 
@@ -268,6 +268,7 @@ document.addEventListener('keydown', (event) => {
             displayStr.value += val;
         }
     }
+
   
     if( val === "Enter" || val === "="){
         try{
@@ -277,7 +278,7 @@ document.addEventListener('keydown', (event) => {
                 answer = factorialFunction(displayStr.value.slice(0,-1));
             }else{
                 console.log(displayStr.value);
-                answer = eval(displayStr.value).toString();
+                answer = eval(displayStr.value);
                 console.log("Answer ",answer);
             }
             
@@ -289,10 +290,11 @@ document.addEventListener('keydown', (event) => {
             //     displayStr.value = "0"
             // },1000);
             console.log(displayStr.value,": Before")
-            
-            document.querySelector("#displayStr").value = answer;
+            console.log(answer,": Before")
+            // displayStr.value = "0";
+            document.getElementById("displayStr").value = eval(document.getElementById("displayStr").value);
             console.log(displayStr.value,":After")
-            
+
         }catch (e) {                        
          
             setTimeout(() => { 
@@ -326,12 +328,24 @@ document.addEventListener('keydown', (event) => {
         }
     }
 
+
+    if(prev === "Shift" && val === "|"){
+        
+        displayStr.value = Math.abs(displayStr.value)
+    }
+
    
 
 
 
     prev = val
     str = displayStr.value
+    console.log("\n"*3)
+    console.log("=============== ENDING VALUE ==============")
+    console.log(displayStr.value)
+    console.log(str)
+    console.log(prev)
+    console.log("=============== ENDING VALUE ==============")
 
 }, false);    
 
