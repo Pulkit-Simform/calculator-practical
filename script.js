@@ -61,6 +61,10 @@ class ListenerEvents{
             str = callbackfn();
             this.#textDisplay.value = str;            
         })
+        this.#elementFromListener.addEventListener("keydown",(event) => {            
+            event.preventDefault();          
+        })
+
     }
 
     // Adding events for individual units
@@ -272,10 +276,13 @@ document.addEventListener('keydown', (event) => {
   
     if( val === "Enter" || val === "="){
         try{
+           
+           
+            
             let answer = "";
 
             if(displayStr.value.slice(-1) === "!"){
-                answer = factorialFunction(displayStr.value.slice(0,-1));
+                answer = factorialFunction(displayStr.value.slice(0,-1)); 
             }else{
                 console.log(displayStr.value);
                 answer = eval(displayStr.value);
@@ -289,11 +296,12 @@ document.addEventListener('keydown', (event) => {
             // setTimeout(() => {                
             //     displayStr.value = "0"
             // },1000);
-            console.log(displayStr.value,": Before")
-            console.log(answer,": Before")
+            // console.log(displayStr.value,": Before")
+            // console.log(answer,": Before")
             // displayStr.value = "0";
-            document.getElementById("displayStr").value = eval(document.getElementById("displayStr").value);
-            console.log(displayStr.value,":After")
+            document.getElementById("displayStr").value = answer; 
+            console.log(displayStr.value,":displayStr.valu")
+            console.log(answer,": answer")
 
         }catch (e) {                        
          
