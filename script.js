@@ -87,7 +87,7 @@ class ListenerEvents{
     //after equal operator clicks or enter
     _returnArithmeticOperations(){
         this.#listenerFunction(() => {
-            // console.log(calculateStr.length)
+            
             if(calculateStr.length > 0){
                 calculateStr.push(str)
                 let c = calculateStr.toString().replaceAll(",","")                            
@@ -250,7 +250,7 @@ let prev = ""
 
 document.addEventListener('keydown', (event) => {
     let val = event.key;
-    console.log(val)
+    
     let numericReg = /^\d+$/;
     let operandCheck = /[\+\-\*\/\%\.\!]/g;
 
@@ -276,17 +276,13 @@ document.addEventListener('keydown', (event) => {
   
     if( val === "Enter" || val === "="){
         try{
-           
-           
             
             let answer = "";
 
             if(displayStr.value.slice(-1) === "!"){
                 answer = factorialFunction(displayStr.value.slice(0,-1)); 
-            }else{
-                console.log(displayStr.value);
-                answer = eval(displayStr.value);
-                console.log("Answer ",answer);
+            }else{                
+                answer = eval(displayStr.value);                
             }
             
             let historyText = document.querySelector(".history-text");
@@ -296,12 +292,10 @@ document.addEventListener('keydown', (event) => {
             // setTimeout(() => {                
             //     displayStr.value = "0"
             // },1000);
-            // console.log(displayStr.value,": Before")
-            // console.log(answer,": Before")
+            
             // displayStr.value = "0";
             document.getElementById("displayStr").value = answer; 
-            console.log(displayStr.value,":displayStr.valu")
-            console.log(answer,": answer")
+            
 
         }catch (e) {                        
          
@@ -348,13 +342,7 @@ document.addEventListener('keydown', (event) => {
 
     prev = val
     str = displayStr.value
-    console.log("\n"*3)
-    console.log("=============== ENDING VALUE ==============")
-    console.log(displayStr.value)
-    console.log(str)
-    console.log(prev)
-    console.log("=============== ENDING VALUE ==============")
-
+    
 }, false);    
 
 //cancel button
